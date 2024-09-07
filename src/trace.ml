@@ -523,7 +523,7 @@ let make_writer dest ?getpid (info : Info.t) =
 
 module IntTbl = Hashtbl.MakeSeeded (struct
   type t = int
-  let hash _seed (id : t) =
+  let seeded_hash _seed (id : t) =
     let h = id * 189696287 in
     h lxor (h lsr 23)
   let equal (a : t) (b : t) = a = b
@@ -942,7 +942,7 @@ module Writer = struct
       let slot = convert_raw_backtrace_slot slot in
       match Slot.location slot with
       | None -> tail
-      | Some { filename; line_number; start_char; end_char } ->
+      | Some { filename; line_number; start_char; end_char; _ } ->
          let defname = match Slot.name slot with Some n -> n | _ -> "??" in
          { filename; line=line_number; start_char; end_char; defname }::tail in
     get_locations (get_raw_backtrace_slot callstack i) |> List.rev
